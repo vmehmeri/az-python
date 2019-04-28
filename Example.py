@@ -8,8 +8,6 @@ import json
 import os
 
 
-_: Dict[str, NetworkManagementClient] = []
-
 # Load global config
 with open('config.json', 'r') as f:
     CONFIG = json.load(f)
@@ -43,7 +41,7 @@ class AzResourceManager:
         for rg in self.resource_groups:
             self.resources[rg] = []
             for resource in self.resource_client.resources.list_by_resource_group(rg):
-                self.resources[rg].append(resource)
+                self.resources[rg].append(resource.as_dict())
         
         with open(RESOURCE_CACHE_FILENAME, 'w') as f:
             json.dump(self.resources, f)
@@ -53,7 +51,7 @@ class AzResourceManager:
             self.resources = json.load(f)
         
         for resource_group in self.resources.keys():
-            self.resource_groups.append(resource_group.name)
+            self.resource_groups.append(resource_group)
 
 
     @lru_cache(maxsize=32)
@@ -61,14 +59,15 @@ class AzResourceManager:
         pips = []
         for rg in self.resource_groups:
             for resource in self.resources[rg]:
-                if "publicIPAddresses" in resource.type:
-                    pip_name = resource.name
+                if "publicIPAddresses" in resource['type']:
+                    pip_name = resource['name']
                     pip_addr = self.network_client.public_ip_addresses.get(rg, pip_name).ip_address
-                    pip_dict_entry = {
-                        'name': pip_name,
-                        'ip_address': pip_addr
-                    }
-                    pips.append(pip_dict_entry)
+                    if pip_addr is not None:
+                        pip_dict_entry = {
+                            'name': pip_name,
+                            'ip_address': pip_addr
+                        }
+                        pips.append(pip_dict_entry)
         return pips
 
 if __name__ == '__main__':
