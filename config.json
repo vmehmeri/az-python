@@ -1,0 +1,52 @@
+{
+    "GLOBAL": {
+        "TENANT_ID": "tenant-id-goes-here",
+        "LOCATION": "westeurope"
+    },
+    "SUBSCRIPTIONS": 
+    {
+        "DEV": {
+            "SUBSCRIPTION_NAME": "devsub",
+            "SUBSCRIPTION_ID": "development-subscription-id-goes-here",
+            "VIRTUAL_NETWORK": {
+                "NAME": "dev-vnet",
+                "RESOURCE_GROUP_NAME": "dev-net-rg",
+                "ADDRESS_PREFIXES": ["10.0.0.0/20", "192.168.0.0/22"],
+                "SUBNETS": [
+                    {
+                        "NAME":"app-subnet",
+                        "ADDRESS_PREFIX": "10.0.0.0/24"
+                    }
+                ]
+            }
+        },
+        "TST": {
+            "SUBSCRIPTION_NAME": "tstsub",
+            "SUBSCRIPTION_ID": "test-subscription-id-goes-here",
+            "VIRTUAL_NETWORK": {
+                "NAME": "dev-vnet",
+                "ADDRESS_PREFIXES": [],
+                "SUBNETS": [
+                    {
+                        "NAME":"app-subnet",
+                        "ADDRESS_PREFIX": ""
+                    }
+                ]
+            }
+        },
+        "PRD": {
+            "SUBSCRIPTION_NAME": "prdsub",
+            "SUBSCRIPTION_ID": "production-subscription-id-goes-here",
+            "VIRTUAL_NETWORK": {
+                "NAME": "dev-vnet",
+                "ADDRESS_PREFIXES": [],
+                "SUBNETS": [
+                    {
+                        "NAME":"app-subnet",
+                        "ADDRESS_PREFIX": ""
+                    }
+                ]
+            }
+        }
+    }
+}
